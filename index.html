@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="../assets/js/vue.2.5.16.js"></script>
+    <script src="../assets/js/jquery.min.js"></script>
+    <title>提醒事项</title>
+</head>
+
+<body>
+    <div id="app">
+        <h2>计划列表</h2>
+
+       
+            <p><input v-model="input1" type="text" placeholder="你想搞事吗。。。">
+            <button title="添加" @click='co'>添加详情</button>
+            <button type="submit" class="inputBtn" title="添加" @click="add">添加</button>
+            </p>
+            <textarea id="co" v-if='text2' v-model="input2" style="height: 180px;width:300px;" ></textarea>
+        <p>未完成</p>
+        <div v-if='' style="width:300px;height: auto;">
+            <div v-if = 'list' v-for="(item ,index) in list">
+                <span style="width: 200px;">{{index+1}}: {{ item.title }}</span>
+                <button @click='okok(item.title,item.content)'>完成</button>
+                <button style="margin-left: 8px;" @click='del(item.title,item.content)'>delete</button>
+                <p style="width:300px;height: auto;border: 1px solid" v-if=''>{{ item.content }}</p>
+            </div>
+        </div>
+        <p>已完成</p>
+        <div style="width:300px;height: auto;">
+            <div v-for="(item ,index) in oklist">
+            <span style="width: 200px;">{{index+1}}: {{ item.title }}</span>
+            
+            <button style="margin-left: 8px;" @click='co2'>详情</button>
+            <button style="margin-left: 8px;" @click='del2(item.title,item.content)'>delete</button>
+            <p style="width:300px;height: auto;border: 1px solid" v-if='cont'>{{ item.content }}</p>
+            
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+var app = new Vue({
+    el:"#app",
+    data:{
+        input1:'',
+        input2:'',
+        list:[],
+        oklist:[{title:'洒洒洒洒',content:'121212'}],
+        text2:false,
+        cont:false,
+
+    },
+    methods:{
+        /*添加详情开关*/
+        co:function(){
+            this.text2 = !this.text2;
+        },
+        co2:function(){
+            this.cont = !this.cont;
+        },
+        /**新增方法*/
+        add:function(){
+            if(this.list.input1 !=0){
+                let data ={
+                    title:this.input1,
+                    content:this.input2,
+                    };
+                this.list.unshift(data);
+                this.input1 = '';
+                this.input2 = '';
+            }
+        },
+        /*完成*/
+        okok:function(a,b){
+            let data ={
+                title:a,
+                content:b
+            };
+            this.oklist.unshift(data);
+            this.removeByValue(this.list, data);
+        },
+        /**删除方法*/
+        del:function(a,b){
+            let data = {
+                title: a,
+                content: b
+            };
+            this.removeByValue(this.list,data);
+        },
+        del2:function(a,b){
+            let data = {
+                title: a,
+                content: b
+            };
+            this.removeByValue(this.oklist, data);
+        },
+        /**数组重构 删除数组内指定的值*/
+        removeByValue:function (arr, val) {
+            for (var i = 0; i < arr.length; i++) {
+                if (arr[i].title == val.title && arr[i].content == val.content) {
+                    arr.splice(i, 1);
+                    break;
+                }
+            }  
+        },
+    }
+})
+</script>
